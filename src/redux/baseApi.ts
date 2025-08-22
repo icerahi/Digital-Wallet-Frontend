@@ -7,5 +7,6 @@ export const baseApi = createApi({
     baseUrl: config.baseUrl,
     credentials: "include",
   }),
+  tagTypes: ["WALLET"],
   endpoints: () => ({}),
 });

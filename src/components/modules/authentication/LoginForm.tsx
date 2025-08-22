@@ -48,6 +48,7 @@ export function LoginForm({
       if (res.success) {
         console.log(res);
         toast.success(res?.message, { id: toastId });
+        navigate("/");
       }
     } catch (error: any) {
       console.log(error);
