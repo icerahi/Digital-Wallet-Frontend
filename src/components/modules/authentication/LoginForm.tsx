@@ -10,9 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/Password";
 import { cn } from "@/lib/utils";
+import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -36,7 +37,22 @@ export function LoginForm({
     },
   });
 
+  const navigate = useNavigate();
+
+  const [login] = useLoginMutation();
+
   const onSubmit = async (data: z.infer<typeof LoginSchema>) => {
+    const toastId = toast.loading("Checking credentials.....");
+    try {
+      const res = await login(data).unwrap();
+      if (res.success) {
+        console.log(res);
+        toast.success(res?.message, { id: toastId });
+      }
+    } catch (error: any) {
+      console.log(error);
+      toast.error(error?.data?.message, { id: toastId });
+    }
     console.log(data);
   };
 

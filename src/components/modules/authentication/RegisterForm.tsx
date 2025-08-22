@@ -17,29 +17,37 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RadioGroupItem } from "@radix-ui/react-radio-group";
 import { useId, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { toast } from "sonner";
 import z from "zod";
 
-const RegisterSchema = z.object({
-  fullname: z.string().min(2, { message: "Fullname atleast 2 charecter long" }),
-  phone: z.string().regex(/^(?:\+8801\d{9}|01\d{9})$/, {
-    message:
-      "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
-  }),
-  password: z
-    .string()
-    .min(8, { message: "Password must be at least 8 charecter." })
-    .regex(/^(?=.*[A-Z])/, {
-      message: "Password must contain at least 1 uppercase letter.",
-    })
-    .regex(/^(?=.*[!@#$%^&*])/, {
-      message: "Password must contain at least 1 special character.",
-    })
-    .regex(/^(?=.*\d)/, {
-      message: "Password must contain at least 1 number.",
+const RegisterSchema = z
+  .object({
+    fullname: z
+      .string()
+      .min(2, { message: "Fullname atleast 2 charecter long" }),
+    phone: z.string().regex(/^(?:\+8801\d{9}|01\d{9})$/, {
+      message:
+        "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     }),
-});
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 charecter." })
+      .regex(/^(?=.*[A-Z])/, {
+        message: "Password must contain at least 1 uppercase letter.",
+      })
+      .regex(/^(?=.*[!@#$%^&*])/, {
+        message: "Password must contain at least 1 special character.",
+      })
+      .regex(/^(?=.*\d)/, {
+        message: "Password must contain at least 1 number.",
+      }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Password do not match",
+    path: ["confirmPassword"],
+  });
 
 export default function RegisterForm({
   className,
@@ -47,6 +55,7 @@ export default function RegisterForm({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const id = useId();
   const [selectedRole, setSelectedRole] = useState<string>(role.user);
+  const navigate = useNavigate();
 
   const [register] = useRegisterMutation();
 
@@ -56,6 +65,7 @@ export default function RegisterForm({
       fullname: "Imran hasan",
       phone: "01726744303",
       password: "@Imran#420",
+      confirmPassword: "@Imran#420",
     },
   });
 
@@ -66,14 +76,12 @@ export default function RegisterForm({
     try {
       const res = await register(userInfo).unwrap();
       if (res.success) {
-        console.log(res.data);
         toast.success(res.message, { id: toastId });
+        navigate("/login");
       }
     } catch (error: any) {
-      console.log(error);
-      toast.error(error?.message, { id: toastId });
+      toast.error(error?.data?.message, { id: toastId });
     }
-    console.log(userInfo);
   };
 
   return (
@@ -130,6 +138,20 @@ export default function RegisterForm({
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Password {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <Password {...field} />
                   </FormControl>
