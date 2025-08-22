@@ -19,6 +19,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Link } from "react-router";
+import { ModeToggle } from "../theme/ModeToggle";
 
 const NavbarMenuList = [
   {
@@ -45,7 +46,7 @@ export const Navbar = () => {
   return (
     <section className="py-4">
       <div className="container">
-        <nav className="flex items-center justify-around">
+        <nav className="flex items-center justify-around sticky-top">
           <Link to="/">
             <Logo />
           </Link>
@@ -72,6 +73,7 @@ export const Navbar = () => {
             <Button className="rounded-4xl">
               <Link to="/Register">Register</Link>{" "}
             </Button>
+            <ModeToggle />
           </div>
 
           <Sheet>
@@ -104,6 +106,7 @@ export const Navbar = () => {
                   <Button>
                     <Link to="/register">Register</Link>
                   </Button>
+                  <ModeToggle />
                 </div>
               </div>
             </SheetContent>

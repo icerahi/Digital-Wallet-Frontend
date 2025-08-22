@@ -57,7 +57,8 @@ const HeroSection = () => {
         </p>
         <div className="mt-12 flex items-center justify-center gap-4">
           <Button size="lg" className="rounded-full text-base">
-            Get Started <ArrowUpRight className="!h-5 !w-5" />
+            Get Started
+            <ArrowUpRight className="!h-5 !w-5" />
           </Button>
           <Button
             variant="outline"

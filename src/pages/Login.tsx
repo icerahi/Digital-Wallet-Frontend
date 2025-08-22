@@ -1,19 +1,23 @@
 import { Logo } from "@/assets/icons/Logo";
 import { LoginForm } from "@/components/modules/authentication/LoginForm";
-import { X } from "lucide-react";
-import { Link } from "react-router";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
 
 export default function Login() {
+  const navigate = useNavigate();
+
   return (
     <div>
       <div className="flex justify-around items-center py-6 ">
         <Logo />
-        <div className="hover:bg-muted p-3 rounded-full cursor-pointer font-light">
-          <Link to="/">
-            {" "}
-            <X size={40} />
-          </Link>
-        </div>
+        <Button
+          onClick={() => navigate("/")}
+          variant="ghost"
+          size="lg"
+          className="hover:bg-muted cursor-pointer rounded-full"
+        >
+          <span className="text-2xl">X</span>
+        </Button>
       </div>
       <hr />
       <div className="bg-background flex min-h-svh flex-col items-center justify-start gap-6 p-6 md:p-10">
