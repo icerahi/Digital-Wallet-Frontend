@@ -1,7 +1,10 @@
+import { role } from "@/constants/role";
 import Agents from "@/pages/admin/Agents";
 import AllTransactions from "@/pages/admin/AllTransactions";
 import Analytics from "@/pages/admin/Analytics";
 import Users from "@/pages/admin/Users";
+import type { ISidebarItem, TRole } from "@/types";
+import { checkAuth } from "@/utils/checkAuth";
 import {
   LucideInspectionPanel,
   LucideLayoutDashboard,
@@ -9,29 +12,29 @@ import {
   UsersIcon,
 } from "lucide-react";
 
-export const AdminSidebar = [
+export const AdminSidebar: ISidebarItem[] = [
   {
     title: "Analytics",
     url: "/dashboard/analytics",
     icon: LucideLayoutDashboard,
-    Component: Analytics,
+    Component: checkAuth(Analytics, role.admin as TRole),
   },
   {
     title: "Users",
     url: "/dashboard/users",
     icon: Users2,
-    Component: Users,
+    Component: checkAuth(Users, role.admin as TRole),
   },
   {
     title: "Agents",
     url: "/dashboard/agents",
     icon: UsersIcon,
-    Component: Agents,
+    Component: checkAuth(Agents, role.admin as TRole),
   },
   {
     title: "Transactions",
     url: "/dashboard/transactions",
     icon: LucideInspectionPanel,
-    Component: AllTransactions,
+    Component: checkAuth(AllTransactions, role.admin as TRole),
   },
 ];

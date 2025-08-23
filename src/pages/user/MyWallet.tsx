@@ -1,3 +1,4 @@
 export default function MyWallet() {
-  return <div>MyWallet</div>;
+  console.log("My wallet");
+  return <div>MyWallellllt</div>;
 }

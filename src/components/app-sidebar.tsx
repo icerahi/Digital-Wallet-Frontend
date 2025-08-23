@@ -21,7 +21,7 @@ import { Link } from "react-router";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: userData, isLoading, error } = useMyWalletQuery(undefined);
-  console.log(userData);
+
   const data = {
     navMain: [...getRoleSpecificSidebar(userData?.data?.owner?.role)],
   };
