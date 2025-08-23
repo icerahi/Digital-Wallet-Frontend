@@ -1,6 +1,13 @@
 "use client";
 
-import { CircleUserRoundIcon, LogOutIcon, MenuIcon } from "lucide-react";
+import {
+  CircleUserRoundIcon,
+  LogOut,
+  LogOutIcon,
+  MenuIcon,
+  User2,
+  Wallet,
+} from "lucide-react";
 
 import { Logo } from "@/assets/icons/Logo";
 import { Button } from "@/components/ui/button";
@@ -91,47 +98,32 @@ export const Navbar = () => {
 
           <div className="hidden items-center gap-4 lg:flex">
             {data?.data?.owner ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    size="lg"
-                    variant="link"
-                    className="rounded-full"
-                    aria-label="Open account menu"
-                  >
-                    {data?.data?.owner?.fullname}
-                    <CircleUserRoundIcon size={16} aria-hidden="true" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="max-w-64">
-                  <DropdownMenuLabel className="flex items-start gap-3">
-                    <div className="flex min-w-0 flex-col">
-                      <NavLink className="flex flex-col" to="/my-wallet">
-                        {" "}
-                        <span className="text-foreground truncate text-sm font-medium">
-                          My Wallet
-                        </span>
-                        <span className="text-muted-foreground truncate text-xs font-normal">
-                          {data?.data?.owner?.phone}
-                        </span>
-                      </NavLink>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
+              <div className="flex min-w-0 flex-col">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="focus:outline-none focus:ring-[2px] focus:ring-offset-2 focus:ring-primary rounded-full flex items-center">
+                    <h4 className="font-bold border-b-2 border-secondary-foreground">
+                      {data?.data?.owner?.fullname}
+                    </h4>{" "}
+                    <User2 />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>
+                      <Link to="/my-wallet">
+                        <Button variant="link">
+                          <Wallet className="h-4 w-4" /> My Wallet
+                        </Button>
+                      </Link>{" "}
+                    </DropdownMenuItem>
 
-                  <DropdownMenuItem>
-                    <Button variant="ghost" onClick={handleLogout}>
-                      {" "}
-                      <LogOutIcon
-                        size={16}
-                        className="opacity-60"
-                        aria-hidden="true"
-                      />
-                      <span>Logout</span>
-                    </Button>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    <DropdownMenuItem className="text-destructive">
+                      <Button variant="ghost" onClick={handleLogout}>
+                        {" "}
+                        <LogOut className="h-4 w-4" /> Logout
+                      </Button>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             ) : (
               <>
                 {" "}

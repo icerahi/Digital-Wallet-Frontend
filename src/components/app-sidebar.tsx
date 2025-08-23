@@ -17,10 +17,12 @@ import {
 } from "@/components/ui/sidebar";
 import { useMyWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { getRoleSpecificSidebar } from "@/utils/getRoleSpecificSidebar";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { data: userData, isLoading, error } = useMyWalletQuery(undefined);
+
+  const location = useLocation();
 
   const data = {
     navMain: [...getRoleSpecificSidebar(userData?.data?.owner?.role)],
@@ -49,7 +51,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               >
                 <SidebarMenuItem>
                   <Link to={item.url}>
-                    <SidebarMenuButton tooltip={item.title}>
+                    <SidebarMenuButton
+                      isActive={item.url === location.pathname}
+                      tooltip={item.title}
+                    >
                       {item.icon && <item.icon />}
                       <span>{item.title}</span>
                     </SidebarMenuButton>
