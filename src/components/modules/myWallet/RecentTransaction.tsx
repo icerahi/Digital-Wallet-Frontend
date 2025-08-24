@@ -7,50 +7,31 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useMyTransactionQuery } from "@/redux/features/transaction/transaction.api";
-const invoices = [
-  {
-    name: "Imran",
-    phone: "01726744303",
-    type: "SEND MONEY",
-    status: "COMPLETED",
-    amount: 10,
-    date: "12 Apr, 2023",
-  },
-  {
-    name: "Imran",
-    phone: "01726744303",
-    type: "SEND MONEY",
-    status: "COMPLETED",
-    amount: 10,
-    date: "12 Apr, 2023",
-  },
-  {
-    name: "Imran",
-    phone: "01726744303",
-    type: "SEND MONEY",
-    status: "COMPLETED",
-    amount: 10,
-    date: "12 Apr, 2023",
-  },
-  {
-    name: "Imran",
-    phone: "01726744303",
-    type: "SEND MONEY",
-    status: "COMPLETED",
-    amount: 10,
-    date: "12 Apr, 2023",
-  },
-  {
-    name: "Imran",
-    phone: "01726744303",
-    type: "SEND MONEY",
-    status: "COMPLETED",
-    amount: 10,
-    date: "12 Apr, 2023",
-  },
-];
+
+const getInfo = (type: any) => {
+  switch (type) {
+    case "ADD_MONEY":
+      return "sender";
+
+    case "WITHDRAW_MONEY":
+      return "receiver";
+
+    case "SEND_MONEY":
+      return "receiver";
+
+    case "CASH_OUT":
+      return "sender";
+
+    case "CASH_IN":
+      return "receiver";
+
+    default:
+      return "Unknown";
+  }
+};
+
 export default function RecentTransaction() {
-  const { data } = useMyTransactionQuery(undefined);
+  const { data } = useMyTransactionQuery({ limit: 5 });
   return (
     <Table>
       <TableHeader>
@@ -67,9 +48,11 @@ export default function RecentTransaction() {
         {data?.data.map((item: any) => (
           <TableRow key={item._id}>
             <TableCell className="font-medium">
-              {item.sender.fullname}
+              {item[getInfo(item.type)]?.fullname || "Unknown"}
             </TableCell>
-            <TableCell className="font-medium">{item.sender.phone}</TableCell>
+            <TableCell className="font-medium">
+              {item[getInfo(item.type)]?.phone || "Unknown"}
+            </TableCell>
             <TableCell>{item.type}</TableCell>
             <TableCell>{item.status}</TableCell>
             <TableCell className="text-right">{item.amount}</TableCell>

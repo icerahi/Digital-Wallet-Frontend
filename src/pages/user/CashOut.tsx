@@ -1,3 +1,9 @@
+import TransactionForm from "@/components/modules/myWallet/TransactionForm";
+
 export default function CashOut() {
-  return <div>CashOut</div>;
+  return (
+    <div>
+      <TransactionForm />
+    </div>
+  );
 }

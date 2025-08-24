@@ -1,13 +1,13 @@
 import MyWallet from "@/pages/user/MyWallet";
 import Settings from "@/pages/user/Settings";
 import TransactionHistory from "@/pages/user/TransactionHistory";
-import { LucideMoveDownLeft, Settings2, Wallet2Icon } from "lucide-react";
+import { ReceiptText, Settings2, Wallet2Icon } from "lucide-react";
 
 import { role } from "@/constants/role";
 import type { ISidebarItem, TRole } from "@/types";
 import { checkAuth } from "@/utils/checkAuth";
 
-export const UserAgentCommonSidebar:ISidebarItem[] = [
+export const UserAgentCommonSidebar: ISidebarItem[] = [
   {
     group: "top",
     title: "My Wallet",
@@ -20,7 +20,7 @@ export const UserAgentCommonSidebar:ISidebarItem[] = [
     group: "bottom",
     title: "Transaction History",
     url: "/my-wallet/transactions",
-    icon: LucideMoveDownLeft,
+    icon: ReceiptText,
     Component: checkAuth(
       TransactionHistory,
       role.user as TRole,
