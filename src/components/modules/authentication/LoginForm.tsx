@@ -37,7 +37,7 @@ export function LoginForm({
     },
   });
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [login] = useLoginMutation();
 

@@ -22,7 +22,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { InfoIcon } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import z from "zod";
@@ -41,11 +41,11 @@ const formInfo: any = {
   },
   cashin: {
     title: "Cash In to a User",
-    sourceLabel: "Cashin Number",
+    sourceLabel: "Reciever Number",
   },
   cashout: {
     title: "Cash out from a User",
-    sourceLabel: "Cashout Number",
+    sourceLabel: "Sender Number",
   },
 };
 
@@ -74,9 +74,7 @@ const TransactionSchema = z.object({
       message:
         "Phone number must be valid for Bangladesh. Format: +8801XXXXXXXXX or 01XXXXXXXXX",
     }),
-  amount: z
-    .number("Amount is Required")
-    .min(1, "Amount must be a positive number"),
+  amount: z.string().min(1, "Amount must be a positive number"),
 });
 
 export const TransactionForm = () => {
@@ -84,7 +82,7 @@ export const TransactionForm = () => {
     resolver: zodResolver(TransactionSchema),
     defaultValues: {
       source: "",
-      amount: 1,
+      amount: "",
     },
   });
   const [errorAlert, setErrorAlert] = useState<string | undefined>();
@@ -96,11 +94,11 @@ export const TransactionForm = () => {
 
   const formInfo = getFormInfo(extractPath);
 
-  const [deposit, depositStatus] = useDepositMoneyMutation();
-  const [withdraw, withdrawStatus] = useWithdrawMoneyMutation();
-  const [sendmoney, sendmoneyStatus] = useSendMoneyMutation();
-  const [cashin, cashinStatus] = useCashInMutation();
-  const [cashout, cashoutStatus] = useCashOutMutation();
+  const [deposit] = useDepositMoneyMutation();
+  const [withdraw] = useWithdrawMoneyMutation();
+  const [sendmoney] = useSendMoneyMutation();
+  const [cashin] = useCashInMutation();
+  const [cashout] = useCashOutMutation();
 
   const mutation: Record<string, Function> = {
     deposit,
@@ -110,13 +108,14 @@ export const TransactionForm = () => {
     cashout,
   };
 
-  const onSubmit = async (data: unknown) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const tranInfo = { ...data, amount: Number(data.amount) };
     if (mutation[extractPath]) {
       try {
-        const res = await mutation[extractPath](data).unwrap();
-        toast.success("Form successfully submitted");
+        const res = await mutation[extractPath](tranInfo).unwrap();
+        toast.success(res?.message);
         navigate("/my-wallet");
-        console.log(res);
+        console.log(res?.message);
         reset();
       } catch (error: any) {
         setErrorAlert(error?.data?.message);

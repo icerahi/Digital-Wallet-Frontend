@@ -47,12 +47,12 @@ const getInfo = (type: TTransactionType, userRole: TRole): TransactionInfo => {
   return {};
 };
 
-export default function RecentTransaction({
+export default function TransactionTable({
   user,
 }: {
   user: Record<string, string>;
 }) {
-  const { data } = useMyTransactionQuery({ limit: 5 });
+  const { data } = useMyTransactionQuery(undefined);
 
   return (
     <Table>
@@ -70,8 +70,10 @@ export default function RecentTransaction({
         {data?.data?.map((item: any, index: number) => {
           const info = getInfo(
             item.type as TTransactionType,
-            user.role as TRole
+            user?.role as TRole
           );
+
+          console.log(info, user?.role, item);
           return (
             <TableRow key={index}>
               <TableCell className="font-medium">

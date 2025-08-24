@@ -16,6 +16,7 @@ export const authApi = baseApi.injectEndpoints({
         method: "POST",
         body: loginInfo,
       }),
+      invalidatesTags: ["WALLET"],
     }),
 
     logout: builder.mutation({

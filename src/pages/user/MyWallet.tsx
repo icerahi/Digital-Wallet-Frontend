@@ -9,7 +9,6 @@ import { toast } from "sonner";
 
 export default function MyWallet() {
   const { data } = useMyWalletQuery(undefined);
-  console.log(data?.data?.owner?.role);
 
   const handleMore = () => {
     toast.info("Hang tight, more is on the way 🚀");
@@ -108,7 +107,7 @@ export default function MyWallet() {
           <Button variant="link">See All</Button>
         </div>
         <div className="flex justify-between gap-3 mt-3 mx-7">
-          <RecentTransaction />
+          <RecentTransaction user={data?.data?.owner} />
         </div>
       </div>
     </div>
