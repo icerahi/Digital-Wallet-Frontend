@@ -1,4 +1,4 @@
-import { role } from "@/constants/role";
+import { role } from "@/constants";
 import CashIn from "@/pages/user/CashIn";
 import CashOut from "@/pages/user/CashOut";
 import type { ISidebarItem, TRole } from "@/types";

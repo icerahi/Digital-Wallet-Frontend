@@ -1,4 +1,4 @@
-import { role } from "@/constants/role";
+import { role } from "@/constants";
 import Agents from "@/pages/admin/Agents";
 import AllTransactions from "@/pages/admin/AllTransactions";
 import Analytics from "@/pages/admin/Analytics";

@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/Password";
 import { RadioGroup } from "@/components/ui/radio-group";
-import { role } from "@/constants/role";
+import { role } from "@/constants";
 import { cn } from "@/lib/utils";
 import { useRegisterMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";

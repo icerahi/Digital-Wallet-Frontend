@@ -1,4 +1,4 @@
-import { role } from "@/constants/role";
+import { role } from "@/constants";
 import DepositMoney from "@/pages/user/DepositMoney";
 import SendMoney from "@/pages/user/SendMoney";
 import WithdrawMoney from "@/pages/user/WithdrawMoney";

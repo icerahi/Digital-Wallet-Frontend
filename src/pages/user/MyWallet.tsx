@@ -1,6 +1,6 @@
 import RecentTransaction from "@/components/modules/myWallet/RecentTransaction";
 import { Button } from "@/components/ui/button";
-import { role } from "@/constants/role";
+import { role } from "@/constants";
 import { useMyWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { Avatar } from "@radix-ui/react-avatar";
 import { BanknoteArrowUp, Ellipsis, Forward, SquarePlus } from "lucide-react";

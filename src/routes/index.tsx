@@ -1,6 +1,6 @@
 import App from "@/App";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import { role } from "@/constants/role";
+import { role } from "@/constants/index.ts";
 import Analytics from "@/pages/admin/Analytics";
 import { Homepage } from "@/pages/Homepage";
 import Login from "@/pages/Login";

@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { role } from "@/constants/role";
+import { role } from "@/constants";
 import { useMyTransactionQuery } from "@/redux/features/transaction/transaction.api";
 import type { TRole, TTransactionType } from "@/types";
 

@@ -3,7 +3,7 @@ import Settings from "@/pages/user/Settings";
 import TransactionHistory from "@/pages/user/TransactionHistory";
 import { ReceiptText, Settings2, Wallet2Icon } from "lucide-react";
 
-import { role } from "@/constants/role";
+import { role } from "@/constants";
 import type { ISidebarItem, TRole } from "@/types";
 import { checkAuth } from "@/utils/checkAuth";
 

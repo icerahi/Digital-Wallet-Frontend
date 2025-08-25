@@ -1,4 +1,4 @@
-import { role } from "@/constants/role";
+import { role } from "@/constants";
 import { AdminSidebar } from "@/routes/sidebar/admin.sidebar";
 import { AgentSidebar } from "@/routes/sidebar/agent.sidebar.ts";
 import { UserSidebar } from "@/routes/sidebar/user.sidebar";
