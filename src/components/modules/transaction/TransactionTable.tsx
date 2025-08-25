@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   Popover,
   PopoverContent,
@@ -28,7 +35,7 @@ import { cn } from "@/lib/utils";
 import { useMyTransactionQuery } from "@/redux/features/transaction/transaction.api";
 import type { TRole, TTransactionType } from "@/types";
 import { getTransactionType } from "@/utils/getTransactionType";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { type DateRange } from "react-day-picker";
@@ -75,14 +82,17 @@ export default function TransactionTable({
 }: {
   user: Record<string, string>;
 }) {
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: addDays(new Date(), -20),
-    to: new Date(),
-  });
+  const [date, setDate] = useState<DateRange | undefined>();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(5);
+
   const [selectedType, setSelectedType] = useState("all");
 
   const { data } = useMyTransactionQuery({
     type: selectedType === "all" ? "" : selectedType,
+    ...date,
+    limit,
+    page: currentPage,
   });
 
   const transactionTypeOptions = [
@@ -94,18 +104,21 @@ export default function TransactionTable({
     setSelectedType(value);
   };
 
-  console.log(console.log(date));
+  const handleClear = () => {
+    setSelectedType("all");
+    setDate(undefined);
+  };
+
+  const totalPage = data?.meta?.totalPages || 1;
+  const totalRecord = data?.meta?.total || 0;
+
   return (
     <div>
-      <div className="flex items-center justify-between items-center py-4">
-        <Input
-          placeholder="Filter emails..."
-          value=""
-          onChange={() => {}}
-          className="max-w-sm"
-        />
+      <div className="flex items-center justify-end  py-4">
         <div className="flex gap-3 items-center">
-          <label className="font-normal text-muted-foreground">Filter by</label>
+          <label className="font-normal text-muted-foreground  ">
+            Filter by
+          </label>
           <div className={cn("grid gap-2")}>
             <Popover>
               <PopoverTrigger className="rounded-md" asChild>
@@ -118,6 +131,7 @@ export default function TransactionTable({
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
+
                   {date?.from ? (
                     date.to ? (
                       <>
@@ -128,11 +142,11 @@ export default function TransactionTable({
                       format(date.from, "LLL dd, y")
                     )
                   ) : (
-                    <span>Pick a date</span>
+                    <span>Start Date - End Date</span>
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
+              <PopoverContent className="w-auto p-1 text-center" align="start">
                 <Calendar
                   autoFocus
                   mode="range"
@@ -141,6 +155,9 @@ export default function TransactionTable({
                   onSelect={setDate}
                   numberOfMonths={2}
                 />
+                <span className="text-sm text-center  text-muted-foreground">
+                  Double Click to Clear
+                </span>
               </PopoverContent>
             </Popover>
           </div>
@@ -167,11 +184,16 @@ export default function TransactionTable({
                 </SelectGroup>
               </SelectContent>
             </Select>
+            <Button onClick={handleClear} variant="link">
+              Clear
+            </Button>
           </div>
         </div>
       </div>
 
-      <p className="text-sm font-medium border-b">Showing 0 of 100 records</p>
+      <p className="text-sm font-medium border-b">
+        Showing {data?.data.length} of {totalRecord} records
+      </p>
       <Table>
         <TableHeader>
           <TableRow>
@@ -220,6 +242,91 @@ export default function TransactionTable({
       {data?.data.length === 0 && (
         <p className="text-center my-20">Not transaction record found!</p>
       )}
+
+      <div>
+        <div className="flex items-center justify-between gap-3 max-sm:flex-col">
+          {/* Page number information */}
+          <p
+            className="text-muted-foreground flex-1 text-sm whitespace-nowrap"
+            aria-live="polite"
+          >
+            Page <span className="text-foreground">{currentPage}</span> of{" "}
+            <span className="text-foreground">{totalPage}</span>
+          </p>
+
+          {/* Pagination buttons */}
+          {totalPage > 1 && (
+            <div className="flex justify-end mt-4">
+              <div>
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => setCurrentPage((prev) => prev - 1)}
+                        className={
+                          currentPage === 1
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-pointer"
+                        }
+                      />
+                    </PaginationItem>
+                    {Array.from(
+                      { length: totalPage },
+                      (_, index) => index + 1
+                    ).map((page) => (
+                      <PaginationItem
+                        onClick={() => setCurrentPage(page)}
+                        key={page}
+                      >
+                        <PaginationLink isActive={currentPage === page}>
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => setCurrentPage((prev) => prev + 1)}
+                        className={
+                          currentPage === totalPage
+                            ? "pointer-events-none opacity-50"
+                            : "cursor-pointer"
+                        }
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            </div>
+          )}
+
+          {/* Results per page */}
+          <div className="flex flex-1 justify-end">
+            <Select
+              value={String(limit)}
+              onValueChange={(value) => {
+                console.log(value);
+                setLimit(Number(value));
+              }}
+              aria-label="Results per page"
+            >
+              <SelectTrigger
+                id="results-per-page"
+                className="w-fit whitespace-nowrap"
+              >
+                <SelectValue placeholder="Select number of results" />
+              </SelectTrigger>
+              <SelectContent>
+                {[5, 10, 25, 50].map((pageSize) => (
+                  <SelectItem key={pageSize} value={pageSize.toString()}>
+                    {pageSize} / page
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
