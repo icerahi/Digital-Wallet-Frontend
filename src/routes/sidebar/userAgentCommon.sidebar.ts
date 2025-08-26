@@ -1,5 +1,5 @@
+import Settings from "@/pages/Settings";
 import MyWallet from "@/pages/user/MyWallet";
-import Settings from "@/pages/user/Settings";
 import TransactionHistory from "@/pages/user/TransactionHistory";
 import { ReceiptText, Settings2, Wallet2Icon } from "lucide-react";
 

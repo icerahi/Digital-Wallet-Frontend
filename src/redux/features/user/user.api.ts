@@ -27,6 +27,15 @@ const userApi = baseApi.injectEndpoints({
       }),
       providesTags: ["USER"],
     }),
+
+    getAllUsers: builder.query({
+      query: (params) => ({
+        url: "/users/all-users",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["USER"],
+    }),
   }),
 });
 
@@ -34,4 +43,5 @@ export const {
   useUpdateUserInfoMutation,
   useChangePasswordMutation,
   useGetMeQuery,
+  useGetAllUsersQuery,
 } = userApi;

@@ -1,9 +1,9 @@
 import { role } from "@/constants";
 import Agents from "@/pages/admin/Agents";
-import AllTransactions from "@/pages/admin/AllTransactions";
-import Analytics from "@/pages/admin/Analytics";
+import Overview from "@/pages/admin/Overview";
+import AllTransactions from "@/pages/admin/Transactions";
 import Users from "@/pages/admin/Users";
-import Settings from "@/pages/user/Settings";
+import Settings from "@/pages/Settings";
 import type { ISidebarItem, TRole } from "@/types";
 import { checkAuth } from "@/utils/checkAuth";
 import {
@@ -16,10 +16,10 @@ import {
 
 export const AdminSidebar: ISidebarItem[] = [
   {
-    title: "Analytics",
-    url: "/dashboard/analytics",
+    title: "Overview",
+    url: "/dashboard/overview",
     icon: LucideLayoutDashboard,
-    Component: checkAuth(Analytics, role.admin as TRole),
+    Component: checkAuth(Overview, role.admin as TRole),
   },
   {
     title: "Users",
@@ -44,6 +44,10 @@ export const AdminSidebar: ISidebarItem[] = [
     title: "Settings",
     url: "/dashboard/settings",
     icon: Settings2,
-    Component: checkAuth(Settings, role.user as TRole, role.agent as TRole),
+    Component: checkAuth(
+      Settings,
+      role.admin as TRole,
+      role.superAdmin as TRole
+    ),
   },
 ];

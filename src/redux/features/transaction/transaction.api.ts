@@ -10,7 +10,16 @@ const transactionApi = baseApi.injectEndpoints({
       }),
       providesTags: ["TRANSACTION"],
     }),
+    getAllTransactions: builder.query({
+      query: (params) => ({
+        url: "/transactions/all",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["TRANSACTION"],
+    }),
   }),
 });
 
-export const { useMyTransactionQuery } = transactionApi;
+export const { useMyTransactionQuery, useGetAllTransactionsQuery } =
+  transactionApi;
