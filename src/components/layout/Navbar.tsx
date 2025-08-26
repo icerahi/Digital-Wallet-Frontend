@@ -26,7 +26,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { authApi, useLogoutMutation } from "@/redux/features/auth/auth.api";
-import { useMyWalletQuery } from "@/redux/features/wallet/wallet.api";
+import { useGetMeQuery } from "@/redux/features/user/user.api";
 import { useAppDispatch } from "@/redux/hook";
 import { Link, NavLink } from "react-router";
 import { toast } from "sonner";
@@ -62,7 +62,7 @@ const NavbarMenuList = [
 ];
 
 export const Navbar = () => {
-  const { data, isLoading, error } = useMyWalletQuery(undefined);
+  const { data, isLoading, error } = useGetMeQuery(undefined);
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
 
@@ -97,12 +97,12 @@ export const Navbar = () => {
           </NavigationMenu>
 
           <div className="hidden items-center gap-4 lg:flex">
-            {data?.data?.owner ? (
+            {data?.owner ? (
               <div className="flex min-w-0 flex-col">
                 <DropdownMenu>
                   <DropdownMenuTrigger className="focus:outline-none focus:ring-[2px] focus:ring-offset-2 focus:ring-primary rounded-full flex items-center">
                     <h4 className="font-bold border-b-2 border-secondary-foreground">
-                      {data?.data?.owner?.fullname}
+                      {data?.owner?.fullname}
                     </h4>{" "}
                     <User2 />
                   </DropdownMenuTrigger>
@@ -116,8 +116,7 @@ export const Navbar = () => {
                     </DropdownMenuItem>
 
                     <DropdownMenuItem className="text-destructive">
-                      <Button variant="ghost" onClick={handleLogout}>
-                        {" "}
+                      <Button asChild variant="ghost" onClick={handleLogout}>
                         <LogOut className="h-4 w-4" /> Logout
                       </Button>
                     </DropdownMenuItem>
@@ -127,12 +126,11 @@ export const Navbar = () => {
             ) : (
               <>
                 {" "}
-                <Button variant="outline">
-                  {" "}
-                  <Link to="/login">Login</Link>{" "}
+                <Button asChild variant="outline">
+                  <Link to="/login">Login</Link>
                 </Button>
-                <Button className="rounded-4xl">
-                  <Link to="/Register">Register</Link>{" "}
+                <Button asChild className="rounded-4xl">
+                  <Link to="/Register">Register</Link>
                 </Button>
               </>
             )}
@@ -163,7 +161,7 @@ export const Navbar = () => {
                   ))}
                 </div>
                 <div className="mt-6 flex flex-col gap-4">
-                  {data?.data?.owner ? (
+                  {data?.owner ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button
@@ -172,7 +170,7 @@ export const Navbar = () => {
                           className="rounded-full"
                           aria-label="Open account menu"
                         >
-                          {data?.data?.owner?.fullname}
+                          {data?.owner?.fullname}
                           <CircleUserRoundIcon size={16} aria-hidden="true" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -180,12 +178,11 @@ export const Navbar = () => {
                         <DropdownMenuLabel className="flex items-start gap-3">
                           <div className="flex min-w-0 flex-col">
                             <NavLink className="flex flex-col" to="/my-wallet">
-                              {" "}
                               <span className="text-foreground truncate text-sm font-medium">
                                 My Wallet
                               </span>
                               <span className="text-muted-foreground truncate text-xs font-normal">
-                                {data?.data?.owner?.phone}
+                                {data?.owner?.phone}
                               </span>
                             </NavLink>
                           </div>
@@ -193,8 +190,7 @@ export const Navbar = () => {
                         <DropdownMenuSeparator />
 
                         <DropdownMenuItem>
-                          <Button onClick={handleLogout}>
-                            {" "}
+                          <Button asChild onClick={handleLogout}>
                             <LogOutIcon
                               size={16}
                               className="opacity-60"
@@ -207,12 +203,10 @@ export const Navbar = () => {
                     </DropdownMenu>
                   ) : (
                     <>
-                      {" "}
-                      <Button variant="outline">
-                        {" "}
+                      <Button asChild variant="outline">
                         <Link to="/login">Login</Link>{" "}
                       </Button>
-                      <Button className="rounded-4xl">
+                      <Button asChild className="rounded-4xl">
                         <Link to="/Register">Register</Link>{" "}
                       </Button>
                     </>

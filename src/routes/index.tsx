@@ -28,11 +28,7 @@ export const router = createBrowserRouter([
   { Component: Login, path: "/login" },
   { Component: Register, path: "/register" },
 
-  // {
-  //   Component: checkAuth(DashboardLayout, role.user as TRole),
-  //   path: "/user/my-wallet",
-  //   children: [...generateRoutes(UserSidebar)],
-  // },
+ 
   {
     Component: checkAuth(DashboardLayout, ...(Object.values(role) as [TRole])),
     path: "/my-wallet",

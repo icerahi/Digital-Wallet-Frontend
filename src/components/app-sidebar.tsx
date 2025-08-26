@@ -15,17 +15,17 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useMyWalletQuery } from "@/redux/features/wallet/wallet.api";
+import { useGetMeQuery } from "@/redux/features/user/user.api";
 import { getRoleSpecificSidebar } from "@/utils/getRoleSpecificSidebar";
 import { Link, useLocation } from "react-router";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: userData, isLoading, error } = useMyWalletQuery(undefined);
+  const { data: userData, isLoading, error } = useGetMeQuery(undefined);
 
   const location = useLocation();
 
   const data = {
-    navMain: [...getRoleSpecificSidebar(userData?.data?.owner?.role)],
+    navMain: [...getRoleSpecificSidebar(userData?.data?.role)],
   };
   return (
     <Sidebar collapsible="icon" {...props}>

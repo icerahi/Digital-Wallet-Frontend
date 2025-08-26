@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import Password from "@/components/ui/Password";
+import { role } from "@/constants";
 import { cn } from "@/lib/utils";
 import { useLoginMutation } from "@/redux/features/auth/auth.api";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -37,7 +38,7 @@ export function LoginForm({
     },
   });
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [login] = useLoginMutation();
 
@@ -48,7 +49,14 @@ export function LoginForm({
       if (res.success) {
         console.log(res);
         toast.success(res?.message, { id: toastId });
-        navigate("/my-wallet");
+        if (
+          res?.data?.user?.role === role.admin ||
+          res?.data?.user?.role === role.superAdmin
+        ) {
+          navigate("/dashboard");
+        } else {
+          navigate("/my-wallet");
+        }
       }
     } catch (error: any) {
       console.log(error);

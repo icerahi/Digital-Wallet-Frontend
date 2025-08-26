@@ -70,7 +70,12 @@ export default function RegisterForm({
   });
 
   const onSubmit = async (data: z.infer<typeof RegisterSchema>) => {
-    const userInfo = { ...data, role: selectedRole };
+    const userInfo = {
+      fullname: data.fullname,
+      phone: data.phone,
+      password: data.password,
+      role: selectedRole,
+    };
 
     const toastId = toast.loading("Registering....");
     try {
