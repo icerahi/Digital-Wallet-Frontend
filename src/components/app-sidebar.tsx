@@ -20,7 +20,7 @@ import { getRoleSpecificSidebar } from "@/utils/getRoleSpecificSidebar";
 import { Link, useLocation } from "react-router";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { data: userData, isLoading, error } = useGetMeQuery(undefined);
+  const { data: userData } = useGetMeQuery(undefined);
 
   const location = useLocation();
 

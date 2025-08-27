@@ -4,10 +4,16 @@ import { role } from "@/constants/index.ts";
 import { Homepage } from "@/pages/Homepage";
 import Login from "@/pages/Login";
 
-import SingleTransaction from "@/pages/admin/singleview/SingleTransaction.tsx";
-import SingleUser from "@/pages/admin/singleview/SingleUser.tsx";
-import SingleWallet from "@/pages/admin/singleview/SingleWallet.tsx";
+import SingleTransaction from "@/components/modules/admin/singleview/SingleTransaction.tsx";
+import SingleUser from "@/components/modules/admin/singleview/SingleUser.tsx";
+import SingleWallet from "@/components/modules/admin/singleview/SingleWallet.tsx";
+import AboutPage from "@/pages/About.tsx";
+import ContactPage from "@/pages/Contact.tsx";
+import FAQ from "@/pages/FAQ.tsx";
+import FeaturesPage from "@/pages/Features.tsx";
+import NotFoundPage from "@/pages/NotFound.tsx";
 import Register from "@/pages/Register";
+import UnauthorizedPage from "@/pages/Unauthorized.tsx";
 import type { TRole } from "@/types";
 import { checkAuth } from "@/utils/checkAuth";
 import { generateRoutes } from "@/utils/generateRoutes";
@@ -26,10 +32,28 @@ export const router = createBrowserRouter([
         index: true,
         Component: Homepage,
       },
+      {
+        Component: AboutPage,
+        path: "/about",
+      },
+      {
+        Component: FeaturesPage,
+        path: "/features",
+      },
+      {
+        Component: ContactPage,
+        path: "/contact",
+      },
+      {
+        Component: FAQ,
+        path: "/faq",
+      },
     ],
   },
   { Component: Login, path: "/login" },
   { Component: Register, path: "/register" },
+  { Component: UnauthorizedPage, path: "/unauthorized" },
+  { Component: NotFoundPage, path: "*" },
 
   {
     Component: checkAuth(DashboardLayout, ...(Object.values(role) as [TRole])),

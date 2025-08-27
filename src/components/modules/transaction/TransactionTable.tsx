@@ -1,6 +1,14 @@
+import { TableLoader } from "@/components/loaders/TableLoader";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Input } from "@/components/ui/input";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -37,7 +45,14 @@ import { useMyTransactionQuery } from "@/redux/features/transaction/transaction.
 import type { TRole, TTransactionType } from "@/types";
 import { getTransactionType } from "@/utils/getTransactionType";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import {
+  ArrowRightLeft,
+  CalendarIcon,
+  CheckCircle,
+  Clock,
+  FilterX,
+  XCircle,
+} from "lucide-react";
 import { useState } from "react";
 import { type DateRange } from "react-day-picker";
 
@@ -52,25 +67,20 @@ const getInfo = (type: TTransactionType, userRole: TRole): TransactionInfo => {
       case "ADD_MONEY":
       case "CASH_IN":
         return { source: "sender", balancePrefix: "+" };
-
       case "WITHDRAW_MONEY":
       case "SEND_MONEY":
       case "CASH_OUT":
         return { source: "receiver", balancePrefix: "-" };
-
       default:
         return {};
     }
   }
-
   if (userRole === role.agent) {
     switch (type) {
       case "CASH_IN":
         return { source: "receiver", balancePrefix: "-" };
-
       case "CASH_OUT":
         return { source: "sender", balancePrefix: "+" };
-
       default:
         return {};
     }
@@ -85,55 +95,110 @@ export default function TransactionTable({
 }) {
   const [date, setDate] = useState<DateRange | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(5);
-
+  const [limit, setLimit] = useState(10);
   const [selectedType, setSelectedType] = useState("all");
-
-  const { data } = useMyTransactionQuery({
+  const { data, isLoading } = useMyTransactionQuery({
     type: selectedType === "all" ? "" : selectedType,
     ...date,
     limit,
     page: currentPage,
   });
-
   const transactionTypeOptions = [
     { value: "all", label: "All" },
     ...transactionTypes,
   ];
-
   const handleFilterChange = (value: string) => {
     setSelectedType(value);
   };
-
   const handleClear = () => {
     setSelectedType("all");
     setDate(undefined);
   };
-
   const totalPage = data?.meta?.totalPages || 1;
   const totalRecord = data?.meta?.total || 0;
 
+  const getStatusIcon = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "completed":
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      case "pending":
+        return <Clock className="h-4 w-4 text-yellow-500" />;
+      case "failed":
+        return <XCircle className="h-4 w-4 text-red-500" />;
+      default:
+        return null;
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusLower = status.toLowerCase();
+    return (
+      <Badge
+        variant="outline"
+        className={cn(
+          "capitalize",
+          statusLower === "completed" &&
+            "border-green-500 text-green-700 dark:border-green-500/50 dark:text-green-400",
+          statusLower === "pending" &&
+            "border-yellow-500 text-yellow-700 dark:border-yellow-500/50 dark:text-yellow-400",
+          statusLower === "failed" &&
+            "border-red-500 text-red-700 dark:border-red-500/50 dark:text-red-400"
+        )}
+      >
+        {status}
+      </Badge>
+    );
+  };
+
+  if (data?.data?.length === 0 && !isLoading) {
+    return (
+      <Card className="border-[var(--border)] bg-[var(--card)] shadow-sm">
+        <CardContent className="flex flex-col items-center justify-center py-12">
+          <div className="rounded-full bg-[var(--muted)] p-4 mb-4">
+            <ArrowRightLeft className="h-8 w-8 text-[var(--muted-foreground)]" />
+          </div>
+          <h3 className="text-lg font-medium mb-1">No transactions found</h3>
+          <p className="text-[var(--muted-foreground)] text-center max-w-md">
+            Try adjusting your filters to see your transaction history.
+          </p>
+          <Button onClick={handleClear} variant="outline" className="mt-4">
+            Clear Filters
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
-    <div>
-      <div className="flex items-center justify-end  py-4">
-        <div className="flex gap-3 items-center">
-       
-          <label className="font-normal text-muted-foreground  ">
-            Filter by
-          </label>
-          <div className={cn("grid gap-2")}>
+    <Card className="border-[var(--border)] bg-[var(--card)] shadow-sm">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2">
+          <ArrowRightLeft className="h-5 w-5 text-[var(--primary)]" />
+          Transaction History
+        </CardTitle>
+        <CardDescription>
+          View and filter your transaction history
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Filters Section */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-sm font-medium text-[var(--muted-foreground)]">
+              Filter by:
+            </span>
+
+            {/* Date Range Picker */}
             <Popover>
-              <PopoverTrigger className="rounded-md" asChild>
+              <PopoverTrigger asChild>
                 <Button
-                  id="date"
                   variant="outline"
                   className={cn(
-                    "w-[300px] justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
+                    "w-full md:w-[300px] justify-start text-left font-normal rounded-lg border-[var(--border)] bg-[var(--background)]",
+                    !date && "text-[var(--muted-foreground)]"
                   )}
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-
                   {date?.from ? (
                     date.to ? (
                       <>
@@ -144,11 +209,11 @@ export default function TransactionTable({
                       format(date.from, "LLL dd, y")
                     )
                   ) : (
-                    <span>Start Date - End Date</span>
+                    <span>Select date range</span>
                   )}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-1 text-center" align="start">
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   autoFocus
                   mode="range"
@@ -157,178 +222,215 @@ export default function TransactionTable({
                   onSelect={setDate}
                   numberOfMonths={2}
                 />
-                <span className="text-sm text-center  text-muted-foreground">
-                  Double Click to Clear
-                </span>
               </PopoverContent>
             </Popover>
-          </div>
-          <div className="flex">
-            {/* <Label className="mb-2">Filter</Label> */}
-            <Select
-              onValueChange={handleFilterChange}
-              value={selectedType}
-              // disabled={divisionIsLoading}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue />
+
+            {/* Transaction Type Filter */}
+            <Select onValueChange={handleFilterChange} value={selectedType}>
+              <SelectTrigger className="w-full md:w-[180px] rounded-lg border-[var(--border)] bg-[var(--background)]">
+                <SelectValue placeholder="Transaction type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Tranaction type</SelectLabel>
-                  {transactionTypeOptions?.map(
+                  <SelectLabel>Transaction Type</SelectLabel>
+                  {transactionTypeOptions.map(
                     (item: { value: string; label: string }) => (
-                      <SelectItem key={item.value} value={item?.value}>
-                        {item?.label}
+                      <SelectItem key={item.value} value={item.value}>
+                        {item.label}
                       </SelectItem>
                     )
                   )}
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <Button onClick={handleClear} variant="link">
+
+            {/* Clear Button */}
+            <Button
+              onClick={handleClear}
+              variant="outline"
+              className="rounded-lg border-[var(--border)] bg-[var(--background)]"
+            >
+              <FilterX className="mr-2 h-4 w-4" />
               Clear
             </Button>
           </div>
         </div>
-      </div>
 
-      <p className="text-sm font-medium border-b">
-        Showing {data?.data.length} of {totalRecord} records
-      </p>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Name</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-right">Date</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data?.data?.map((item: any, index: number) => {
-            const info = getInfo(
-              item.type as TTransactionType,
-              user?.role as TRole
-            );
-
-            console.log(info, user?.role, item);
-            return (
-              <TableRow key={index}>
-                <TableCell className="font-medium">
-                  {info.source
-                    ? item[info.source]?.fullname || "Unknown"
-                    : "Unknown"}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {info.source
-                    ? item[info.source]?.phone || "Unknown"
-                    : "Unknown"}
-                </TableCell>
-                <TableCell>{getTransactionType(item.type)?.label}</TableCell>
-                <TableCell>{item.status}</TableCell>
-                <TableCell className="text-right">
-                  {info.balancePrefix || ""}
-                  {item.amount}
-                </TableCell>
-                <TableCell className="text-right">
-                  {new Date(item.createdAt).toDateString()}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-      {data?.data.length === 0 && (
-        <p className="text-center my-20">Not transaction record found!</p>
-      )}
-
-      <div>
-        <div className="flex items-center justify-between gap-3 max-sm:flex-col">
-          {/* Page number information */}
-          <p
-            className="text-muted-foreground flex-1 text-sm whitespace-nowrap"
-            aria-live="polite"
-          >
-            Page <span className="text-foreground">{currentPage}</span> of{" "}
-            <span className="text-foreground">{totalPage}</span>
+        {/* Results Info */}
+        <div className="flex items-center justify-between">
+          <p className="text-sm text-[var(--muted-foreground)]">
+            Showing{" "}
+            <span className="font-medium text-[var(--foreground)]">
+              {data?.data?.length || 0}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium text-[var(--foreground)]">
+              {totalRecord}
+            </span>{" "}
+            records
           </p>
+        </div>
 
-          {/* Pagination buttons */}
-          {totalPage > 1 && (
-            <div className="flex justify-end mt-4">
-              <div>
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious
-                        onClick={() => setCurrentPage((prev) => prev - 1)}
-                        className={
-                          currentPage === 1
-                            ? "pointer-events-none opacity-50"
-                            : "cursor-pointer"
-                        }
-                      />
+        {/* Table Section */}
+        {isLoading ? (
+          <TableLoader />
+        ) : (
+          <div className="rounded-md border border-[var(--border)] overflow-hidden">
+            <Table>
+              <TableHeader className="bg-[var(--muted)]">
+                <TableRow>
+                  <TableHead className="w-[120px] font-semibold">
+                    Name
+                  </TableHead>
+                  <TableHead className="font-semibold">Phone</TableHead>
+                  <TableHead className="font-semibold">Type</TableHead>
+                  <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="text-right font-semibold">
+                    Amount
+                  </TableHead>
+                  <TableHead className="text-right font-semibold">
+                    Date
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {data?.data?.map((item: any, index: number) => {
+                  const info = getInfo(
+                    item.type as TTransactionType,
+                    user?.role as TRole
+                  );
+                  const transactionTypeInfo = getTransactionType(item.type);
+
+                  return (
+                    <TableRow
+                      key={index}
+                      className="hover:bg-[var(--accent)] transition-colors"
+                    >
+                      <TableCell className="font-medium">
+                        {info.source
+                          ? item[info.source]?.fullname || "Unknown"
+                          : "Unknown"}
+                      </TableCell>
+                      <TableCell className="font-medium">
+                        {info.source
+                          ? item[info.source]?.phone || "Unknown"
+                          : "Unknown"}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <span>{transactionTypeInfo?.label}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          {getStatusIcon(item.status)}
+                          {getStatusBadge(item.status)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        <span
+                          className={cn(
+                            "inline-flex items-center",
+                            info.balancePrefix === "+" && "text-green-600",
+                            info.balancePrefix === "-" && "text-red-600"
+                          )}
+                        >
+                          {info.balancePrefix || ""}{" "}
+                          {Number(item.amount).toFixed(2)} BDT
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right text-[var(--muted-foreground)]">
+                        {new Date(item.createdAt).toLocaleDateString("en-BD", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+
+        {/* Pagination Section */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-sm text-[var(--muted-foreground)]">
+            Page{" "}
+            <span className="font-medium text-[var(--foreground)]">
+              {currentPage}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium text-[var(--foreground)]">
+              {totalPage}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {totalPage > 1 && (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setCurrentPage((prev) => prev - 1)}
+                      className={
+                        currentPage === 1
+                          ? "pointer-events-none opacity-50"
+                          : "cursor-pointer"
+                      }
+                    />
+                  </PaginationItem>
+                  {Array.from(
+                    { length: totalPage },
+                    (_, index) => index + 1
+                  ).map((page) => (
+                    <PaginationItem
+                      onClick={() => setCurrentPage(page)}
+                      key={page}
+                    >
+                      <PaginationLink isActive={currentPage === page}>
+                        {page}
+                      </PaginationLink>
                     </PaginationItem>
-                    {Array.from(
-                      { length: totalPage },
-                      (_, index) => index + 1
-                    ).map((page) => (
-                      <PaginationItem
-                        onClick={() => setCurrentPage(page)}
-                        key={page}
-                      >
-                        <PaginationLink isActive={currentPage === page}>
-                          {page}
-                        </PaginationLink>
-                      </PaginationItem>
-                    ))}
+                  ))}
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setCurrentPage((prev) => prev + 1)}
+                      className={
+                        currentPage === totalPage
+                          ? "pointer-events-none opacity-50"
+                          : "cursor-pointer"
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
 
-                    <PaginationItem>
-                      <PaginationNext
-                        onClick={() => setCurrentPage((prev) => prev + 1)}
-                        className={
-                          currentPage === totalPage
-                            ? "pointer-events-none opacity-50"
-                            : "cursor-pointer"
-                        }
-                      />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            </div>
-          )}
-
-          {/* Results per page */}
-          <div className="flex flex-1 justify-end">
-            <Select
-              value={String(limit)}
-              onValueChange={(value) => {
-                console.log(value);
-                setLimit(Number(value));
-              }}
-              aria-label="Results per page"
-            >
-              <SelectTrigger
-                id="results-per-page"
-                className="w-fit whitespace-nowrap"
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-[var(--muted-foreground)]">
+                Rows:
+              </span>
+              <Select
+                value={String(limit)}
+                onValueChange={(value) => setLimit(Number(value))}
               >
-                <SelectValue placeholder="Select number of results" />
-              </SelectTrigger>
-              <SelectContent>
-                {[5, 10, 25, 50].map((pageSize) => (
-                  <SelectItem key={pageSize} value={pageSize.toString()}>
-                    {pageSize} / page
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+                <SelectTrigger className="w-fit">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {[5, 10, 25, 50].map((pageSize) => (
+                    <SelectItem key={pageSize} value={pageSize.toString()}>
+                      {pageSize} / page
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

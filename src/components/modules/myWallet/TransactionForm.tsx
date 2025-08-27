@@ -26,6 +26,7 @@ import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router";
 import { toast } from "sonner";
 import z from "zod";
+
 const formInfo: any = {
   deposit: {
     title: "Deposit Money",

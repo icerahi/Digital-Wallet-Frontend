@@ -14,7 +14,7 @@ createRoot(document.getElementById("root")!).render(
       <ThemeProvider defaultTheme="system" storageKey="ui-theme">
         {" "}
         <RouterProvider router={router} />
-        <Toaster richColors expand={true} position="top-right" />
+        <Toaster richColors expand={true} position="bottom-right" />
       </ThemeProvider>
     </Provider>
   </StrictMode>

@@ -1,58 +1,54 @@
-import React from "react";
-
+import { FullPageLoader } from "@/components/loaders/FullpageLoader";
 import ChangePasswordModal from "@/components/modules/settings/ChangePasswordModal";
 import UpdateNameModal from "@/components/modules/settings/UpdateNameModal";
 import UpdatPhoneModal from "@/components/modules/settings/UpdatePhoneModal";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useGetMeQuery } from "@/redux/features/user/user.api";
 
 const Settings = () => {
-  const { data } = useGetMeQuery(undefined);
+  const { data, isLoading } = useGetMeQuery(undefined);
+
+  if (isLoading) return <FullPageLoader />;
+
   return (
-    <section className="py-32">
-      <div className="container px-0 md:px-8">
-        <h1 className="mb-10 px-4 text-3xl font-semibold md:mb-14 md:text-4xl">
+    <section className="py-5">
+      <div className="container px-4 md:px-8">
+        <h1 className="mb-8 text-2xl font-bold md:mb-12 md:text-4xl">
           Account Settings
         </h1>
-        <Separator />
+        <Separator className="mb-8" />
 
-        <div className="w-[50vw] mr-auto  p-5">
-          <React.Fragment>
-            <div className="flex justify-between py-3 items-center">
+        <Card className="max-w-3xl">
+          <CardContent className="divide-y">
+            {/* Fullname */}
+            <div className="flex flex-col items-start justify-between gap-2 py-5 sm:flex-row sm:items-center">
               <div>
-                {" "}
-                <p className="">Fullname</p>
-                <p className="order-1 text-xl font-semibold md:order-none md:col-span-2">
-                  {data?.data?.fullname}
-                </p>
+                <p className="text-sm text-muted-foreground">Full Name</p>
+                <p className="text-lg font-medium">{data?.data?.fullname}</p>
               </div>
               <UpdateNameModal />
             </div>
 
-            <div className="flex justify-between py-3 items-center">
+            {/* Phone Number */}
+            <div className="flex flex-col items-start justify-between gap-2 py-5 sm:flex-row sm:items-center">
               <div>
-                {" "}
-                <p className="">Phone Number</p>
-                <p className="order-1 text-xl font-semibold md:order-none md:col-span-2">
-                  {data?.data?.phone}
-                </p>
+                <p className="text-sm text-muted-foreground">Phone Number</p>
+                <p className="text-lg font-medium">{data?.data?.phone}</p>
               </div>
               <UpdatPhoneModal />
             </div>
 
-            <div className="flex justify-between py-3 items-center">
+            {/* Password */}
+            <div className="flex flex-col items-start justify-between gap-2 py-5 sm:flex-row sm:items-center">
               <div>
-                {" "}
-                <p className="">Password</p>
-                <p className="order-1 text-xl font-semibold md:order-none md:col-span-2">
-                  **********
-                </p>
+                <p className="text-sm text-muted-foreground">Password</p>
+                <p className="text-lg font-medium">**********</p>
               </div>
               <ChangePasswordModal />
             </div>
-            {/* <Separator /> */}
-          </React.Fragment>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </section>
   );

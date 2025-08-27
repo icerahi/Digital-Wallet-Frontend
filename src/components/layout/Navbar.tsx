@@ -28,7 +28,7 @@ import {
 import { authApi, useLogoutMutation } from "@/redux/features/auth/auth.api";
 import { useGetMeQuery } from "@/redux/features/user/user.api";
 import { useAppDispatch } from "@/redux/hook";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useNavigate } from "react-router";
 import { toast } from "sonner";
 import { ModeToggle } from "../theme/ModeToggle";
 import {
@@ -43,41 +43,48 @@ import {
 const NavbarMenuList = [
   {
     title: "Home",
-    href: "#",
+    href: "/",
   },
   {
     title: "About",
-    href: "#",
+    href: "/about",
   },
   {
     title: "Features",
     description: "Configure your preferences",
-    href: "#",
+    href: "/features",
   },
   {
     title: "Contact",
     description: "Connect with other tools",
-    href: "#",
+    href: "/contact",
+  },
+  {
+    title: "FAQ",
+    description: "Connect with other tools",
+    href: "/faq",
   },
 ];
 
 export const Navbar = () => {
-  const { data, isLoading, error } = useGetMeQuery(undefined);
+  const { data } = useGetMeQuery(undefined);
   const [logout] = useLogoutMutation();
   const dispatch = useAppDispatch();
 
+  const navigate = useNavigate();
   const handleLogout = async () => {
     const res = await logout(undefined).unwrap();
     if (res.success) {
       toast.success("Logout successfully");
+      navigate("/");
       dispatch(authApi.util.resetApiState());
     }
   };
 
   return (
-    <section className="py-4">
+    <section className="py-4  sticky top-0 z-50 bg-[var(--background)]/90 backdrop-blur-sm border-b border-[var(--border)] shadow-sm transition-all duration-300">
       <div className="container">
-        <nav className="flex items-center justify-around sticky-top">
+        <nav className="flex items-center justify-around ">
           <Link to="/">
             <Logo />
           </Link>
@@ -129,7 +136,7 @@ export const Navbar = () => {
                 <Button asChild variant="outline">
                   <Link to="/login">Login</Link>
                 </Button>
-                <Button asChild className="rounded-4xl">
+                <Button asChild>
                   <Link to="/Register">Register</Link>
                 </Button>
               </>

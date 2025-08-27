@@ -49,6 +49,7 @@ export function LoginForm({
       if (res.success) {
         console.log(res);
         toast.success(res?.message, { id: toastId });
+
         if (
           res?.data?.user?.role === role.admin ||
           res?.data?.user?.role === role.superAdmin
@@ -62,7 +63,6 @@ export function LoginForm({
       console.log(error);
       toast.error(error?.data?.message, { id: toastId });
     }
-    console.log(data);
   };
 
   return (
