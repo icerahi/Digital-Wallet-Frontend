@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  CircleUserRoundIcon,
-  LogOut,
-  LogOutIcon,
-  MenuIcon,
-  User2,
-  Wallet,
-} from "lucide-react";
+import { LogOut, LogOutIcon, MenuIcon, User2, Wallet } from "lucide-react";
 
 import { Logo } from "@/assets/icons/Logo";
 import { Button } from "@/components/ui/button";
@@ -110,7 +103,7 @@ export const Navbar = () => {
                   <DropdownMenuTrigger className="focus:outline-none focus:ring-[2px] focus:ring-offset-2 focus:ring-primary rounded-full flex items-center">
                     <h4 className="font-bold border-b-2 border-secondary-foreground">
                       {data?.owner?.fullname}
-                    </h4>{" "}
+                    </h4>
                     <User2 />
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
@@ -124,7 +117,9 @@ export const Navbar = () => {
 
                     <DropdownMenuItem className="text-destructive">
                       <Button asChild variant="ghost" onClick={handleLogout}>
-                        <LogOut className="h-4 w-4" /> Logout
+                        <span>
+                          <LogOut className="h-4 w-4" /> Logout
+                        </span>
                       </Button>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -132,7 +127,6 @@ export const Navbar = () => {
               </div>
             ) : (
               <>
-                {" "}
                 <Button asChild variant="outline">
                   <Link to="/login">Login</Link>
                 </Button>
@@ -162,7 +156,11 @@ export const Navbar = () => {
               <div className="flex flex-col p-4">
                 <div className="flex flex-col gap-6">
                   {NavbarMenuList.map((item) => (
-                    <Link to={item.href} className="font-medium">
+                    <Link
+                      to={item.href}
+                      key={item.href}
+                      className="font-medium"
+                    >
                       {item.title}
                     </Link>
                   ))}
@@ -171,16 +169,14 @@ export const Navbar = () => {
                   {data?.owner ? (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button
-                          size="lg"
-                          variant="link"
-                          className="rounded-full"
-                          aria-label="Open account menu"
-                        >
-                          {data?.owner?.fullname}
-                          <CircleUserRoundIcon size={16} aria-hidden="true" />
-                        </Button>
+                        <div className="flex items-center gap-2 focus:outline-none focus:ring-[2px] focus:ring-offset-2 focus:ring-primary rounded-full">
+                          <h4 className="font-bold border-b-2 border-secondary-foreground">
+                            {data?.owner?.fullname}
+                          </h4>
+                          <User2 />
+                        </div>
                       </DropdownMenuTrigger>
+
                       <DropdownMenuContent className="max-w-64">
                         <DropdownMenuLabel className="flex items-start gap-3">
                           <div className="flex min-w-0 flex-col">
@@ -198,12 +194,14 @@ export const Navbar = () => {
 
                         <DropdownMenuItem>
                           <Button asChild onClick={handleLogout}>
-                            <LogOutIcon
-                              size={16}
-                              className="opacity-60"
-                              aria-hidden="true"
-                            />
-                            <span>Logout</span>
+                            <span>
+                              <LogOutIcon
+                                size={16}
+                                className="opacity-60"
+                                aria-hidden="true"
+                              />
+                              Logout
+                            </span>
                           </Button>
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -211,10 +209,10 @@ export const Navbar = () => {
                   ) : (
                     <>
                       <Button asChild variant="outline">
-                        <Link to="/login">Login</Link>{" "}
+                        <Link to="/login">Login</Link>
                       </Button>
                       <Button asChild className="rounded-4xl">
-                        <Link to="/Register">Register</Link>{" "}
+                        <Link to="/Register">Register</Link>
                       </Button>
                     </>
                   )}
