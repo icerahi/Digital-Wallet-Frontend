@@ -108,8 +108,8 @@ export default function RecentTransaction({
               <TableBody>
                 {data?.data?.map((item: any, index: number) => {
                   const info = getInfo(
-                    item.type as TTransactionType,
-                    user.role as TRole
+                    item?.type as TTransactionType,
+                    user?.role as TRole
                   );
                   return (
                     <TableRow

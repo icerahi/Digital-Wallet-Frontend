@@ -42,8 +42,8 @@ import {
 import { role, transactionTypes } from "@/constants";
 import { cn } from "@/lib/utils";
 import { useMyTransactionQuery } from "@/redux/features/transaction/transaction.api";
+import { useGetMeQuery } from "@/redux/features/user/user.api";
 import type { TRole, TTransactionType } from "@/types";
-import { getTransactionType } from "@/utils/getTransactionType";
 import { format } from "date-fns";
 import {
   ArrowRightLeft,
@@ -62,30 +62,38 @@ type TransactionInfo = {
 };
 
 const getInfo = (type: TTransactionType, userRole: TRole): TransactionInfo => {
-  if (userRole === role.user) {
-    switch (type) {
-      case "ADD_MONEY":
-      case "CASH_IN":
+  switch (type) {
+    case "ADD_MONEY":
+      if (userRole === role.user) {
         return { source: "sender", balancePrefix: "+" };
-      case "WITHDRAW_MONEY":
-      case "SEND_MONEY":
-      case "CASH_OUT":
+      } else {
         return { source: "receiver", balancePrefix: "-" };
-      default:
-        return {};
-    }
-  }
-  if (userRole === role.agent) {
-    switch (type) {
-      case "CASH_IN":
-        return { source: "receiver", balancePrefix: "-" };
-      case "CASH_OUT":
+      }
+
+    case "CASH_IN":
+      if (userRole === role.user) {
         return { source: "sender", balancePrefix: "+" };
-      default:
-        return {};
-    }
+      } else {
+        return { source: "receiver", balancePrefix: "-" };
+      }
+    case "WITHDRAW_MONEY":
+      if (userRole === role.user) {
+        return { source: "receiver", balancePrefix: "-" };
+      } else {
+        return { source: "sender", balancePrefix: "+" };
+      }
+    case "SEND_MONEY":
+      return { source: "sender", balancePrefix: "-" };
+
+    case "CASH_OUT":
+      if (userRole === role.user) {
+        return { source: "receiver", balancePrefix: "-" };
+      } else {
+        return { source: "sender", balancePrefix: "+" };
+      }
+    default:
+      return {};
   }
-  return {};
 };
 
 export default function TransactionTable({
@@ -103,6 +111,9 @@ export default function TransactionTable({
     limit,
     page: currentPage,
   });
+
+  const { data: getMe } = useGetMeQuery(undefined);
+
   const transactionTypeOptions = [
     { value: "all", label: "All" },
     ...transactionTypes,
@@ -297,10 +308,10 @@ export default function TransactionTable({
                 {data?.data?.map((item: any, index: number) => {
                   const info = getInfo(
                     item.type as TTransactionType,
-                    user?.role as TRole
+                    getMe?.data?.role
                   );
-                  const transactionTypeInfo = getTransactionType(item.type);
 
+                  console.log(info, item?.type);
                   return (
                     <TableRow
                       key={index}
@@ -318,7 +329,7 @@ export default function TransactionTable({
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <span>{transactionTypeInfo?.label}</span>
+                          <span>{item?.type}</span>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -335,7 +346,7 @@ export default function TransactionTable({
                             info.balancePrefix === "-" && "text-red-600"
                           )}
                         >
-                          {info.balancePrefix || ""}{" "}
+                          {info.balancePrefix || ""}
                           {Number(item.amount).toFixed(2)} BDT
                         </span>
                       </TableCell>
