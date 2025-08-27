@@ -77,7 +77,7 @@ Follow these instructions to set up and run the project locally.
 ### **1. Clone the Repository**
 
 ```bash
-git clone https://github.com/your-username/digital-wallet-frontend.git
+git clone https://github.com/icerahi/digital-wallet-frontend.git
 cd digital-wallet-frontend
 ```
 
@@ -113,7 +113,7 @@ or
 npm run dev
 ```
 
-The application should now be running on [http://localhost:5173](http://localhost:5173).
+The application should now be running on [http://localhost:3000](http://localhost:3000).
 
 ---
 
@@ -131,10 +131,12 @@ The application should now be running on [http://localhost:5173](http://localhos
 You can use the following credentials to test the different roles:
 
 - **Admin**:
-  - **Email**: `admin@example.com`
-  - **Password**: `password123`
+  - **Phone**: `01726744303`
+  - **Password**: `@Imran#420`
 - **Agent**:
-  - **Email**: `agent@example.com`
-  - **Password**: `password123`
-
-*Note: Replace with your actual seed credentials if they differ.*
+  - **Email**: `01726744304`
+  - **Password**: `@Imran#420`
+- **User**:
+  - **Email**: `01726744305`
+  - **Password**: `@Imran#420`
+ 
