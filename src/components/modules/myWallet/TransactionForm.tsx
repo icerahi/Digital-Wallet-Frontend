@@ -116,7 +116,6 @@ export const TransactionForm = () => {
         const res = await mutation[extractPath](tranInfo).unwrap();
         toast.success(res?.message);
         navigate("/my-wallet");
-        console.log(res?.message);
         reset();
       } catch (error: any) {
         setErrorAlert(error?.data?.message);

@@ -64,6 +64,7 @@ export default function TransactionTable() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedType, setSelectedType] = useState("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
+
   const { data, isLoading } = useGetAllTransactionsQuery({
     phone: searchInput,
     type: selectedType === "all" ? "" : selectedType,

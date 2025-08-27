@@ -47,7 +47,6 @@ export function LoginForm({
     try {
       const res = await login(data).unwrap();
       if (res.success) {
-        console.log(res);
         toast.success(res?.message, { id: toastId });
 
         if (

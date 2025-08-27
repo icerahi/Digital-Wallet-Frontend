@@ -96,15 +96,12 @@ const getInfo = (type: TTransactionType, userRole: TRole): TransactionInfo => {
   }
 };
 
-export default function TransactionTable({
-  user,
-}: {
-  user: Record<string, string>;
-}) {
+export default function TransactionTable() {
   const [date, setDate] = useState<DateRange | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [selectedType, setSelectedType] = useState("all");
+
   const { data, isLoading } = useMyTransactionQuery({
     type: selectedType === "all" ? "" : selectedType,
     ...date,
