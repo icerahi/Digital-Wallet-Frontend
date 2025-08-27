@@ -8,7 +8,7 @@ import { Link } from "react-router";
 import { toast } from "sonner";
 
 export default function MyWallet() {
-  const { data, isLoading } = useMyWalletQuery(undefined);
+  const { data } = useMyWalletQuery(undefined);
 
   const handleMore = () => {
     toast.info("Hang tight, more is on the way 🚀");

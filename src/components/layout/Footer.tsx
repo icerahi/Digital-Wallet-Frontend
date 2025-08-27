@@ -1,4 +1,5 @@
 import { Logo } from "@/assets/icons/Logo";
+import { Link } from "react-router";
 
 export default function Footer() {
   return (
@@ -20,36 +21,36 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/features"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Features
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Security
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Pricing
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Business
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -60,36 +61,36 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Blog
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Help Center
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Developers
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   API Docs
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -100,36 +101,36 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   About
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Careers
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/contact"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Contact
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="#"
                   className="hover:text-[var(--primary)] transition-colors"
                 >
                   Partners
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -138,24 +139,24 @@ export default function Footer() {
         <div className="pt-8 border-t border-[var(--border)] text-sm text-center">
           <p>© {new Date().getFullYear()} Bondhu Pay. All rights reserved.</p>
           <div className="mt-4 flex justify-center space-x-6">
-            <a
-              href="#"
+            <Link
+              to="#"
               className="hover:text-[var(--primary)] transition-colors"
             >
               Privacy Policy
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="#"
               className="hover:text-[var(--primary)] transition-colors"
             >
               Terms of Service
-            </a>
-            <a
-              href="#"
+            </Link>
+            <Link
+              to="#"
               className="hover:text-[var(--primary)] transition-colors"
             >
               Cookie Policy
-            </a>
+            </Link>
           </div>
         </div>
       </div>
