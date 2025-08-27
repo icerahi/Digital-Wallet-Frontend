@@ -43,6 +43,7 @@ import {
 import { EllipsisIcon, Search } from "lucide-react";
 import { useState } from "react";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
+import { Link } from "react-router";
 import { toast } from "sonner";
 
 export default function AgentsTable() {
@@ -226,8 +227,11 @@ export default function AgentsTable() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuGroup>
-                        <DropdownMenuItem>
-                          <span>View</span>
+                        <DropdownMenuItem asChild>
+                          <Link to={`/dashboard/agents/${item._id}`}>
+                            {" "}
+                            <span>View</span>
+                          </Link>
                         </DropdownMenuItem>
 
                         {item?.agentApproval ? (

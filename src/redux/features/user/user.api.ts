@@ -37,6 +37,14 @@ const userApi = baseApi.injectEndpoints({
       providesTags: ["USER"],
     }),
 
+    getSingleUser: builder.query({
+      query: (userId) => ({
+        url: `/users/${userId}`,
+        method: "GET",
+      }),
+      providesTags: ["USER"],
+    }),
+
     suspendAgent: builder.mutation({
       query: (agentId) => ({
         url: `/users/suspend-agent/${agentId}`,
@@ -62,4 +70,5 @@ export const {
   useGetAllUsersQuery,
   useSuspendAgentMutation,
   useApproveAgentMutation,
+  useGetSingleUserQuery,
 } = userApi;

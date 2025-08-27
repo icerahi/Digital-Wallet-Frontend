@@ -4,7 +4,9 @@ import { role } from "@/constants/index.ts";
 import { Homepage } from "@/pages/Homepage";
 import Login from "@/pages/Login";
 
-import { SingleViewModal } from "@/components/modules/admin/singleview/SingleWallet.tsx";
+import SingleTransaction from "@/pages/admin/singleview/SingleTransaction.tsx";
+import SingleUser from "@/pages/admin/singleview/SingleUser.tsx";
+import SingleWallet from "@/pages/admin/singleview/SingleWallet.tsx";
 import Register from "@/pages/Register";
 import type { TRole } from "@/types";
 import { checkAuth } from "@/utils/checkAuth";
@@ -48,9 +50,30 @@ export const router = createBrowserRouter([
       { index: true, element: <Navigate to="/dashboard/overview" /> },
 
       ...generateRoutes(...AdminSidebar),
-      { Component: SingleViewModal, path: "/dashboard/agents/:id" },
-      { Component: SingleViewModal, path: "/dashboard/wallets/:id" },
-      { Component: SingleViewModal, path: "/dashboard/transactions/:id" },
+      {
+        Component: checkAuth(
+          SingleUser,
+          role.admin as TRole,
+          role.superAdmin as TRole
+        ),
+        path: "/dashboard/agents/:id",
+      },
+      {
+        Component: checkAuth(
+          SingleWallet,
+          role.admin as TRole,
+          role.superAdmin as TRole
+        ),
+        path: "/dashboard/wallets/:id",
+      },
+      {
+        Component: checkAuth(
+          SingleTransaction,
+          role.admin as TRole,
+          role.superAdmin as TRole
+        ),
+        path: "/dashboard/transactions/:id",
+      },
     ],
   },
 ]);

@@ -1,5 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Form, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,10 +45,11 @@ import { cn } from "@/lib/utils";
 import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transaction.api";
 import { getTransactionType } from "@/utils/getTransactionType";
 import { format } from "date-fns";
-import { CalendarIcon, Search } from "lucide-react";
+import { CalendarIcon, EllipsisIcon, Search } from "lucide-react";
 import { useState } from "react";
 import { type DateRange } from "react-day-picker";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
+import { Link } from "react-router";
 
 export default function TransactionTable() {
   const [date, setDate] = useState<DateRange | undefined>();
@@ -81,7 +89,7 @@ export default function TransactionTable() {
   const handleClear = () => {
     setSelectedType("all");
     setSelectedStatus("all");
-    setSearchInput("")
+    setSearchInput("");
     form.reset();
     setDate(undefined);
   };
@@ -257,6 +265,32 @@ export default function TransactionTable() {
                 <TableCell>{item.status}</TableCell>
 
                 <TableCell>{new Date(item.createdAt).toDateString()}</TableCell>
+                <TableCell>
+                  {" "}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <div className="flex ">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="shadow-none"
+                          aria-label="Edit item"
+                        >
+                          <EllipsisIcon size={16} aria-hidden="true" />
+                        </Button>
+                      </div>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem asChild>
+                          <Link to={`/dashboard/transactions/${item._id}`}>
+                            <span>View</span>
+                          </Link>
+                        </DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
               </TableRow>
             );
           })}

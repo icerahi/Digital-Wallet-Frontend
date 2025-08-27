@@ -18,6 +18,14 @@ const walletApi = baseApi.injectEndpoints({
       providesTags: ["WALLET"],
     }),
 
+    getSingleWallet: builder.query({
+      query: (walletId) => ({
+        url: `/wallets/${walletId}`,
+        method: "GET",
+      }),
+      providesTags: ["WALLET"],
+    }),
+
     depositMoney: builder.mutation({
       query: (payload) => ({
         url: "/wallets/add-money",
@@ -86,4 +94,5 @@ export const {
   useGetAllWalletsQuery,
   useBlockWalletMutation,
   useUnblockWalletMutation,
+  useGetSingleWalletQuery,
 } = walletApi;
