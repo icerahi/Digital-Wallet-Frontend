@@ -9,6 +9,14 @@ const walletApi = baseApi.injectEndpoints({
       }),
       providesTags: ["WALLET"],
     }),
+    getAllWallets: builder.query({
+      query: (params) => ({
+        url: "/wallets/all",
+        method: "GET",
+        params,
+      }),
+      providesTags: ["WALLET"],
+    }),
 
     depositMoney: builder.mutation({
       query: (payload) => ({
@@ -50,6 +58,21 @@ const walletApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["TRANSACTION", "WALLET"],
     }),
+
+    blockWallet: builder.mutation({
+      query: (walletId) => ({
+        url: `/wallets/block/${walletId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["WALLET"],
+    }),
+    unblockWallet: builder.mutation({
+      query: (walletId) => ({
+        url: `/wallets/unblock/${walletId}`,
+        method: "PATCH",
+      }),
+      invalidatesTags: ["WALLET"],
+    }),
   }),
 });
 
@@ -60,4 +83,7 @@ export const {
   useSendMoneyMutation,
   useCashInMutation,
   useCashOutMutation,
+  useGetAllWalletsQuery,
+  useBlockWalletMutation,
+  useUnblockWalletMutation,
 } = walletApi;

@@ -2,7 +2,7 @@ import { role } from "@/constants";
 import Agents from "@/pages/admin/Agents";
 import Overview from "@/pages/admin/Overview";
 import AllTransactions from "@/pages/admin/Transactions";
-import Users from "@/pages/admin/Users";
+import Wallets from "@/pages/admin/Wallets";
 import Settings from "@/pages/Settings";
 import type { ISidebarItem, TRole } from "@/types";
 import { checkAuth } from "@/utils/checkAuth";
@@ -10,8 +10,8 @@ import {
   LucideInspectionPanel,
   LucideLayoutDashboard,
   Settings2,
-  Users2,
   UsersIcon,
+  Wallet,
 } from "lucide-react";
 
 export const AdminSidebar: ISidebarItem[] = [
@@ -22,13 +22,13 @@ export const AdminSidebar: ISidebarItem[] = [
     Component: checkAuth(Overview, role.admin as TRole),
   },
   {
-    title: "Users",
-    url: "/dashboard/users",
-    icon: Users2,
-    Component: checkAuth(Users, role.admin as TRole),
+    title: "Wallets Management",
+    url: "/dashboard/wallets",
+    icon: Wallet,
+    Component: checkAuth(Wallets, role.admin as TRole),
   },
   {
-    title: "Agents",
+    title: "Agents Management",
     url: "/dashboard/agents",
     icon: UsersIcon,
     Component: checkAuth(Agents, role.admin as TRole),

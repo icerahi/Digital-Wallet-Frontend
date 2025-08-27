@@ -1,3 +1,9 @@
+import TransactionTable from "@/components/modules/admin/TransactionsTable";
+
 export default function Transactions() {
-  return <div>AllTransactions</div>;
+  return (
+    <div>
+      <TransactionTable />
+    </div>
+  );
 }

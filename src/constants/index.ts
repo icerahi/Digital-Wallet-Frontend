@@ -12,3 +12,9 @@ export const transactionTypes = [
   { value: "CASH_IN", label: "Cash In" },
   { value: "CASH_OUT", label: "Cash Out" },
 ];
+
+export const transactionStatus = [
+  { value: "PENDING", label: "Pending" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "REVERSED", label: "Reversed" },
+];

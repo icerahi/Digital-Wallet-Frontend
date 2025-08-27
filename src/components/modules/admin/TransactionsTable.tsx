@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Form, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Pagination,
   PaginationContent,
@@ -31,66 +33,29 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { role, transactionTypes } from "@/constants";
+import { transactionStatus, transactionTypes } from "@/constants";
 import { cn } from "@/lib/utils";
-import { useMyTransactionQuery } from "@/redux/features/transaction/transaction.api";
-import type { TRole, TTransactionType } from "@/types";
+import { useGetAllTransactionsQuery } from "@/redux/features/transaction/transaction.api";
 import { getTransactionType } from "@/utils/getTransactionType";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Search } from "lucide-react";
 import { useState } from "react";
 import { type DateRange } from "react-day-picker";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 
-type TransactionInfo = {
-  source?: "sender" | "receiver";
-  balancePrefix?: "+" | "-";
-};
-
-const getInfo = (type: TTransactionType, userRole: TRole): TransactionInfo => {
-  if (userRole === role.user) {
-    switch (type) {
-      case "ADD_MONEY":
-      case "CASH_IN":
-        return { source: "sender", balancePrefix: "+" };
-
-      case "WITHDRAW_MONEY":
-      case "SEND_MONEY":
-      case "CASH_OUT":
-        return { source: "receiver", balancePrefix: "-" };
-
-      default:
-        return {};
-    }
-  }
-
-  if (userRole === role.agent) {
-    switch (type) {
-      case "CASH_IN":
-        return { source: "receiver", balancePrefix: "-" };
-
-      case "CASH_OUT":
-        return { source: "sender", balancePrefix: "+" };
-
-      default:
-        return {};
-    }
-  }
-  return {};
-};
-
-export default function TransactionTable({
-  user,
-}: {
-  user: Record<string, string>;
-}) {
+export default function TransactionTable() {
   const [date, setDate] = useState<DateRange | undefined>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
+  const [searchInput, setSearchInput] = useState("");
 
   const [selectedType, setSelectedType] = useState("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
 
-  const { data } = useMyTransactionQuery({
+  const { data } = useGetAllTransactionsQuery({
+    phone: searchInput,
     type: selectedType === "all" ? "" : selectedType,
+    status: selectedStatus === "all" ? "" : selectedStatus,
     ...date,
     limit,
     page: currentPage,
@@ -100,27 +65,73 @@ export default function TransactionTable({
     { value: "all", label: "All" },
     ...transactionTypes,
   ];
+  const transactionStatuseOptions = [
+    { value: "all", label: "All" },
+    ...transactionStatus,
+  ];
 
-  const handleFilterChange = (value: string) => {
+  const handleFilterType = (value: string) => {
     setSelectedType(value);
+  };
+
+  const handleFilterStatus = (value: string) => {
+    setSelectedStatus(value);
   };
 
   const handleClear = () => {
     setSelectedType("all");
+    setSelectedStatus("all");
+    setSearchInput("")
+    form.reset();
     setDate(undefined);
   };
 
   const totalPage = data?.meta?.totalPages || 1;
   const totalRecord = data?.meta?.total || 0;
 
+  const form = useForm({
+    defaultValues: {
+      phone: "",
+    },
+  });
+
+  const handleSearch: SubmitHandler<FieldValues> = async (data) => {
+    setSearchInput(data.phone);
+  };
+
   return (
     <div>
-      <div className="flex items-center justify-end  py-4">
+      <div className="flex items-center justify-start gap-3 py-4">
+        <div className="relative">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSearch)}
+              className="grid gap-y-4"
+            >
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <div className="relative">
+                    <Input
+                      {...field}
+                      className="pe-9 w-[300px]"
+                      placeholder="Search by phone"
+                    />
+                    <button
+                      type="submit"
+                      className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                      aria-label="Subscribe"
+                    >
+                      <Search size={16} aria-hidden="true" />
+                    </button>
+                  </div>
+                )}
+              />
+            </form>
+          </Form>
+        </div>
         <div className="flex gap-3 items-center">
-       
-          <label className="font-normal text-muted-foreground  ">
-            Filter by
-          </label>
           <div className={cn("grid gap-2")}>
             <Popover>
               <PopoverTrigger className="rounded-md" asChild>
@@ -163,10 +174,11 @@ export default function TransactionTable({
               </PopoverContent>
             </Popover>
           </div>
-          <div className="flex">
-            {/* <Label className="mb-2">Filter</Label> */}
+          <div className="flex gap-3">
+            <Label className="mb-2">Category</Label>
+            {/* FIlter by type */}
             <Select
-              onValueChange={handleFilterChange}
+              onValueChange={handleFilterType}
               value={selectedType}
               // disabled={divisionIsLoading}
             >
@@ -175,8 +187,31 @@ export default function TransactionTable({
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectLabel>Tranaction type</SelectLabel>
+                  <SelectLabel>Tranaction Category</SelectLabel>
                   {transactionTypeOptions?.map(
+                    (item: { value: string; label: string }) => (
+                      <SelectItem key={item.value} value={item?.value}>
+                        {item?.label}
+                      </SelectItem>
+                    )
+                  )}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {/* filter by transaction status  */}
+            <Label className="mb-2">Status</Label>
+            <Select
+              onValueChange={handleFilterStatus}
+              value={selectedStatus}
+              // disabled={divisionIsLoading}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Tranaction Status</SelectLabel>
+                  {transactionStatuseOptions?.map(
                     (item: { value: string; label: string }) => (
                       <SelectItem key={item.value} value={item?.value}>
                         {item?.label}
@@ -193,49 +228,35 @@ export default function TransactionTable({
         </div>
       </div>
 
-      <p className="text-sm font-medium border-b">
-        Showing {data?.data.length} of {totalRecord} records
-      </p>
+      <div className="flex gap-4">
+        {" "}
+        <p className="text-sm font-medium border-b">
+          Showing {data?.data.length} of {totalRecord} records
+        </p>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Name</TableHead>
-            <TableHead>Phone</TableHead>
+            <TableHead>Sender</TableHead>
+            <TableHead>Receiver</TableHead>
             <TableHead>Type</TableHead>
+            <TableHead>Amount</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead className="text-right">Date</TableHead>
+
+            <TableHead>Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data?.data?.map((item: any, index: number) => {
-            const info = getInfo(
-              item.type as TTransactionType,
-              user?.role as TRole
-            );
-
-            console.log(info, user?.role, item);
             return (
               <TableRow key={index}>
-                <TableCell className="font-medium">
-                  {info.source
-                    ? item[info.source]?.fullname || "Unknown"
-                    : "Unknown"}
-                </TableCell>
-                <TableCell className="font-medium">
-                  {info.source
-                    ? item[info.source]?.phone || "Unknown"
-                    : "Unknown"}
-                </TableCell>
+                <TableCell>{item?.sender?.phone}</TableCell>
+                <TableCell>{item?.receiver?.phone}</TableCell>
                 <TableCell>{getTransactionType(item.type)?.label}</TableCell>
+                <TableCell>{item.amount}</TableCell>
                 <TableCell>{item.status}</TableCell>
-                <TableCell className="text-right">
-                  {info.balancePrefix || ""}
-                  {item.amount}
-                </TableCell>
-                <TableCell className="text-right">
-                  {new Date(item.createdAt).toDateString()}
-                </TableCell>
+
+                <TableCell>{new Date(item.createdAt).toDateString()}</TableCell>
               </TableRow>
             );
           })}
