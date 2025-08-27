@@ -12,7 +12,7 @@ A secure, role-based, and user-friendly frontend application for a Digital Walle
 
 ## **Live Demo**
 
-[**[https://bondhu-pay.vercel.app/]**]([https://your-live-url.com](https://bondhu-pay.vercel.app/))
+[**https://bondhu-pay.vercel.app/**]([https://your-live-url.com](https://bondhu-pay.vercel.app/))
 
 ---
 
