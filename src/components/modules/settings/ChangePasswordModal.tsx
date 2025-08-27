@@ -3,7 +3,6 @@
 import { ArrowRight, InfoIcon } from "lucide-react";
 import { useState } from "react";
 
-import { ButtonLoader } from "@/components/loaders/ButtonLoader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -72,7 +71,7 @@ export default function ChangePasswordModal() {
     },
   });
 
-  const [changePassword, isLoading] = useChangePasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
 
   const onSubmit = async (data: z.infer<typeof changePasswordSchema>) => {
     const passwordInfo = {
@@ -183,7 +182,7 @@ export default function ChangePasswordModal() {
             <Button variant="outline">Cancel</Button>
           </DialogClose>
           <Button form="changepassword-form" type="submit">
-            {isLoading ? <ButtonLoader /> : "Save changes"}
+            Save changes
           </Button>
         </DialogFooter>
       </DialogContent>

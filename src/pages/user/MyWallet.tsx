@@ -1,6 +1,7 @@
 import RecentTransaction from "@/components/modules/myWallet/RecentTransaction";
 import { Button } from "@/components/ui/button";
 import { role } from "@/constants";
+import { cn } from "@/lib/utils";
 import { useMyWalletQuery } from "@/redux/features/wallet/wallet.api";
 import { Avatar } from "@radix-ui/react-avatar";
 import { BanknoteArrowUp, Ellipsis, Forward, SquarePlus } from "lucide-react";
@@ -14,8 +15,26 @@ export default function MyWallet() {
     toast.info("Hang tight, more is on the way 🚀");
   };
 
+  const owner = data?.data?.owner;
+
   return (
-    <div className="container w-full">
+    <div
+      className={cn(
+        "container w-full",
+        owner?.role === role.agent
+          ? !owner?.agentApproval && "pointer-events-none opacity-70"
+          : ""
+      )}
+    >
+      {owner?.role === role.agent
+        ? !owner?.agentApproval && (
+            <div className="absolute  p-5 w-full">
+              <h1 className="text-destructive text-5xl text-center">
+                SUSPENDED
+              </h1>
+            </div>
+          )
+        : ""}
       <div className="grid grid-cols-1 md:grid-cols-5 min-h-[40vh] p-5">
         <div className="grid items-baseline gap-6 md:col-span-2">
           <div className="flex items-center gap-3">
@@ -23,7 +42,7 @@ export default function MyWallet() {
               B
             </Avatar>
             <div>
-              <h2 className="text-2xl font-bold">BDT Balance</h2>
+              <h2 className="text-2xl font-bold">BDT Balance</h2>{" "}
               <p className="text-muted-foreground font-semibold">
                 {data?.data?.owner?.phone}
               </p>
@@ -41,7 +60,6 @@ export default function MyWallet() {
               <div className="flex flex-col justify-center items-center gap-2">
                 <Button asChild className="size-15 addMoney">
                   <Link to="/my-wallet/deposit">
-                    {" "}
                     <SquarePlus className="size-7" />
                   </Link>
                 </Button>
@@ -72,7 +90,6 @@ export default function MyWallet() {
               <div className="flex flex-col justify-center items-center gap-2">
                 <Button asChild className="size-15 cashin">
                   <Link to="/my-wallet/cashin">
-                    {" "}
                     <SquarePlus className="size-7" />
                   </Link>
                 </Button>

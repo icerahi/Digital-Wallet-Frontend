@@ -35,7 +35,7 @@ export function SectionCards() {
             {allSystemUsers?.meta?.total}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">Included User,Agent,Admin</Badge>
+            <Badge variant="outline">Users | Agents | Admins</Badge>
           </CardAction>
         </CardHeader>
       </Card>

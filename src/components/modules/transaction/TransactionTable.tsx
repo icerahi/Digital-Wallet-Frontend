@@ -161,25 +161,6 @@ export default function TransactionTable({
     );
   };
 
-  if (data?.data?.length === 0 && !isLoading) {
-    return (
-      <Card className="border-[var(--border)] bg-[var(--card)] shadow-sm">
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <div className="rounded-full bg-[var(--muted)] p-4 mb-4">
-            <ArrowRightLeft className="h-8 w-8 text-[var(--muted-foreground)]" />
-          </div>
-          <h3 className="text-lg font-medium mb-1">No transactions found</h3>
-          <p className="text-[var(--muted-foreground)] text-center max-w-md">
-            Try adjusting your filters to see your transaction history.
-          </p>
-          <Button onClick={handleClear} variant="outline" className="mt-4">
-            Clear Filters
-          </Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card className="border-[var(--border)] bg-[var(--card)] shadow-sm">
       <CardHeader className="pb-4">
@@ -311,7 +292,6 @@ export default function TransactionTable({
                     getMe?.data?.role
                   );
 
-                  console.log(info, item?.type);
                   return (
                     <TableRow
                       key={index}
@@ -362,6 +342,29 @@ export default function TransactionTable({
                 })}
               </TableBody>
             </Table>
+
+            {data?.data?.length === 0 && !isLoading && (
+              <Card className="border-[var(--border)] bg-[var(--card)] shadow-sm">
+                <CardContent className="flex flex-col items-center justify-center py-12">
+                  <div className="rounded-full bg-[var(--muted)] p-4 mb-4">
+                    <ArrowRightLeft className="h-8 w-8 text-[var(--muted-foreground)]" />
+                  </div>
+                  <h3 className="text-lg font-medium mb-1">
+                    No transactions found
+                  </h3>
+                  <p className="text-[var(--muted-foreground)] text-center max-w-md">
+                    Try adjusting your filters to see your transaction history.
+                  </p>
+                  <Button
+                    onClick={handleClear}
+                    variant="outline"
+                    className="mt-4"
+                  >
+                    Clear Filters
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
           </div>
         )}
 

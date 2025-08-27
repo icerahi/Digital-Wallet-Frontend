@@ -68,13 +68,14 @@ export default function WalletsTable() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedWalletStatus, setSelectedWalletStatus] = useState("all");
   const [selectedRole, setSelectRole] = useState("all");
-  const { data, isLoading } = useGetAllWalletsQuery({
+  const { data, isLoading, isError } = useGetAllWalletsQuery({
     phone: searchInput.trim(),
     role: selectedRole === "all" ? "" : selectedRole,
     isBlocked: selectedWalletStatus === "all" ? "" : selectedWalletStatus,
     limit,
     page: currentPage,
   });
+
   const [blockWallet] = useBlockWalletMutation();
   const [unblockWallet] = useUnblockWalletMutation();
   const WalletStatusOptions = [
@@ -262,7 +263,7 @@ export default function WalletsTable() {
       {/* Table Section */}
       {isLoading ? (
         <TableLoader />
-      ) : data?.data?.length ? (
+      ) : data?.data?.length && !isError ? (
         <Card className="border-[var(--border)] bg-[var(--card)] shadow-sm overflow-hidden">
           <Table>
             <TableHeader className="bg-[var(--muted)]">

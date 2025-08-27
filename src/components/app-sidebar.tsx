@@ -15,6 +15,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { role } from "@/constants";
+import { cn } from "@/lib/utils";
 import { useGetMeQuery } from "@/redux/features/user/user.api";
 import { getRoleSpecificSidebar } from "@/utils/getRoleSpecificSidebar";
 import { Link, useLocation } from "react-router";
@@ -27,6 +29,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const data = {
     navMain: [...getRoleSpecificSidebar(userData?.data?.role)],
   };
+
+  const user = userData?.data;
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -41,7 +45,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarMenu>
+          <SidebarMenu
+            className={cn(
+              user?.role === role.agent
+                ? !user?.agentApproval && "pointer-events-none opacity-70"
+                : ""
+            )}
+          >
             {data.navMain.map((item) => (
               <Collapsible
                 key={item.title}
