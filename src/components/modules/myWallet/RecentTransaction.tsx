@@ -111,6 +111,7 @@ export default function RecentTransaction({
                     item?.type as TTransactionType,
                     user?.role as TRole
                   );
+
                   return (
                     <TableRow
                       key={index}

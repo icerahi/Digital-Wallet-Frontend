@@ -126,7 +126,7 @@ export const TransactionForm = () => {
   };
 
   return (
-    <div className="space-y-4 w-1/2 mx-auto">
+    <div className="space-y-4 w-full md:w-1/2 mx-auto">
       <Card className="shadow-sm">
         <CardHeader>
           <CardTitle className="text-lg text-center">

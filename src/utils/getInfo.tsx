@@ -28,9 +28,11 @@ export const getInfo = (
 
   if (userRole === role.agent) {
     switch (type) {
+      case "ADD_MONEY":
       case "CASH_IN":
         return { source: "receiver", balancePrefix: "-" };
 
+      case "WITHDRAW_MONEY":
       case "CASH_OUT":
         return { source: "sender", balancePrefix: "+" };
 
